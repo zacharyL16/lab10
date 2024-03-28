@@ -1,7 +1,7 @@
 """
 ===============================================
 Name: server.py
-Assignment: Lab 10, Exercise A
+Assignment: Lab 10, Exercise A, B, C
 Author(s): Zachary Lam, Trevor Nguyen
 Submission: March 27, 2024
 Description: Flask.
@@ -14,8 +14,8 @@ import json
 import os
 
 app = Flask(__name__)
-# CORS(app)  # Enable CORS for all domains on all routes
-CORS(app, origins=["http://example.com", "http://localhost:3000"])
+CORS(app)  # Enable CORS for all domains on all routes
+# CORS(app, origins=["http://example.com", "http://localhost:3000"])
 
 def load_products():
     with open('products.json', 'r') as f:
