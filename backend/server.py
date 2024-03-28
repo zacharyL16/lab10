@@ -1,3 +1,13 @@
+"""
+===============================================
+Name: server.py
+Assignment: Lab 10, Exercise A
+Author(s): Zachary Lam, Trevor Nguyen
+Submission: March 27, 2024
+Description: Flask.
+===============================================
+"""
+
 import json
 import os
 
@@ -37,6 +47,31 @@ def add_product():
 @app.route('/product-images/<path:filename>')
 def get_image(filename):
     return send_from_directory('product-images', filename)
+
+@app.route('/products/update/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    products = load_products()
+    product = next((p for p in products if p['id'] == product_id), None)
+    if product:
+        updated_product = request.json
+        product.update(updated_product)
+        with open('products.json', 'w') as f:
+            json.dump({"products": products}, f)
+        return jsonify(product)
+    else:
+        return ('', 404)
+
+@app.route('/products/remove/<int:product_id>', methods=['DELETE'])
+def remove_product(product_id):
+    products = load_products()
+    product = next((p for p in products if p['id'] == product_id), None)
+    if product:
+        products.remove(product)
+        with open('products.json', 'w') as f:
+            json.dump({"products": products}, f)
+        return jsonify(product)
+    else:
+        return ('', 404)
 
 if __name__ == '__main__':
     app.run(debug=True)
