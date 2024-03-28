@@ -8,14 +8,14 @@ Description: Flask.
 ===============================================
 """
 
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS  # Import CORS
 import json
 import os
 
 app = Flask(__name__)
 # CORS(app)  # Enable CORS for all domains on all routes
 CORS(app, origins=["http://example.com", "http://localhost:3000"])
-
-app = Flask(__name__)
 
 def load_products():
     with open('products.json', 'r') as f:

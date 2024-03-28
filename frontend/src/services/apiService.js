@@ -43,8 +43,9 @@ export const addProduct = (product) => {
 };
 
 // Edits an existing product by ID
+// Edits an existing product by ID
 export const editProduct = (id, product) => {
-  return axios.put(`${BASE_URL}/${id}`, JSON.stringify(product), {
+  return axios.put(`${BASE_URL}/${id}`, product, {
     headers: {
       "Content-Type": "application/json",
     },
