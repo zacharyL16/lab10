@@ -11,7 +11,9 @@ Description: Flask.
 import json
 import os
 
-from flask import Flask, jsonify, request, send_from_directory
+app = Flask(__name__)
+# CORS(app)  # Enable CORS for all domains on all routes
+CORS(app, origins=["http://example.com", "http://localhost:3000"])
 
 app = Flask(__name__)
 
