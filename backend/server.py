@@ -8,10 +8,11 @@ Description: Flask.
 ===============================================
 """
 
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS  # Import CORS
 import json
 import os
+
+from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS  # Import CORS
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
@@ -50,30 +51,30 @@ def add_product():
 def get_image(filename):
     return send_from_directory('product-images', filename)
 
-@app.route('/products/update/<int:product_id>', methods=['PUT'])
+@app.route('/products/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
     products = load_products()
-    product = next((p for p in products if p['id'] == product_id), None)
-    if product:
-        updated_product = request.json
-        product.update(updated_product)
+    product_index = next((i for i, p in enumerate(products) if p['id'] == product_id), None)
+    if product_index is not None:
+        products[product_index] = request.json
+        products[product_index]['id'] = product_id
         with open('products.json', 'w') as f:
             json.dump({"products": products}, f)
-        return jsonify(product)
+        return jsonify(products[product_index])
     else:
-        return ('', 404)
+        return jsonify({"error": "Product not found"}), 404
 
-@app.route('/products/remove/<int:product_id>', methods=['DELETE'])
+@app.route('/products/<int:product_id>', methods=['DELETE'])
 def remove_product(product_id):
     products = load_products()
-    product = next((p for p in products if p['id'] == product_id), None)
-    if product:
-        products.remove(product)
+    product_index = next((i for i, p in enumerate(products) if p['id'] == product_id), None)
+    if product_index is not None:
+        deleted_product = products.pop(product_index)
         with open('products.json', 'w') as f:
             json.dump({"products": products}, f)
-        return jsonify(product)
+        return jsonify(deleted_product)
     else:
-        return ('', 404)
+        return jsonify({"error": "Product not found"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
